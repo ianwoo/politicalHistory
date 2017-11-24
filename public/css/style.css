@@ -1,0 +1,43 @@
+th {
+	padding-right: .5em;
+	padding-left: .5em;
+}
+
+td {
+	padding-right: .5em;
+	padding-left: .5em;
+}
+
+img {
+	height: 2em;
+}
+
+.democrat {
+	background-color: blue;
+	color: white;
+}
+
+.republican {
+	background-color: red;
+	color: white;
+}
+
+.year {
+	width: 4em;
+}
+
+.date {
+	width: 6em;
+}
+
+#numbering {
+	width: 2em;
+}
+
+#idstring {
+	font-size: .5em;
+}
+
+#alive {
+	color: limegreen;
+}

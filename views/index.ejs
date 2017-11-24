@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Political History</title>
+    <!-- icon -->
+	  <link rel="icon" href="https://undertale.aminoapps.com/static/bower/emojify.js/images/emoji/fish.png">
+	  <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- font awesome for carets -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <!-- css stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+	  <!-- angularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <!-- main javascript -->
+    <script src="js/frontend_app.js"></script>
+
+</head>
+
+<body ng-app="mean_app">
+    <h1>Political History</h1>
+
+    <div ng-controller="crud_controller">
+
+        <h2>SEARCH</h2>
+        <div class="form-group">
+            <label>Search Presidents:</label>
+            <input type="text" class="form-control" id="search" ng-model="searchPresident">
+        </div>
+
+        <h2>CREATE</h2>
+        <form name="prezForm">
+            <input type="text" placeholder="number" ng-model="input_number" required>
+            <input type="text" placeholder="name" ng-model="input_president" required>
+            <input type="text" placeholder="year born" ng-model="input_birth_year" required>
+            <input type="text" placeholder="year died" ng-model="input_death_year">
+            <input type="text" placeholder="date took office" ng-model="input_took_office" required>
+            <input type="text" placeholder="date left office" ng-model="input_left_office">
+            <input type="text" placeholder="political party" ng-model="input_party" required>
+            <button ng-click="create()">create president</button>
+        </form>
+
+        <h2>READ</h2>
+        <table>
+            <thead ng-click="sortReverse = !sortReverse">
+                <tr>
+                    <!-- id header should not be sortable -->
+                    <th>
+                      _id
+                    </th>
+
+                    <!-- president number header is default sort type -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'number'">
+                      #
+                      <span ng-show="sortType == 'number' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'number' && !sortReverse" class="fa fa-caret-up"></span>
+                      </a>
+                    </th>
+
+                    <!-- president name header -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'president'">
+                      president
+                      <span ng-show="sortType == 'president' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'president' && !sortReverse" class="fa fa-caret-up"></span>
+                      </a>
+                    </th>
+
+                    <!-- year born header -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'birth_year'">
+                      born
+                      <span ng-show="sortType == 'birth_year' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'birth_year' && !sortReverse" class="fa fa-caret-up"></span>
+                      </a>
+                    </th>
+
+                    <!-- year died header -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'death_year'">
+                      died
+                      <span ng-show="sortType == 'death_year' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'death_year' && !sortReverse" class="fa fa-caret-up"></span>
+                      </a>
+                    </th>
+
+                    <!-- age upon death header -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'death_year - birth_year'">
+                      age
+                      <span ng-show="sortType == 'death_year - birth_year' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'death_year - birth_year' && !sortReverse" class="fa fa-caret-up"></span>
+                      </a>
+                    </th>
+
+                    <!-- we'll implement sorting by year took office when we figure out how to parse it -->
+                    <th>took office</th>
+
+                    <!-- we'll implement sorting by year left office when we figure out how to parse it -->
+                    <th>left office</th>
+
+                    <!-- political party header -->
+                    <th>
+                      <a href="#" ng-click="sortType = 'party'">
+                      political party
+                      <span ng-show="sortType == 'party' && sortReverse" class="fa fa-caret-down"></span>
+                      <span ng-show="sortType == 'party' && !sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="president in presidents | orderBy:sortType:sortReverse | filter:searchPresident">
+                <tr>
+                    <!-- _id is non-editable field, css id to shrink font -->
+                    <td id="idstring">{{president._id}}</td>
+                    <!-- number is editable field, css id to resize input field width -->
+                    <td><input id="numbering" type="text" ng-model="president.number"></td>
+                    <!-- president name is editable field -->
+                    <td><input type="text" ng-model="president.president"></td>
+                    <!-- birth year is editable field -->
+                    <td><input class="year" type="text" ng-model="president.birth_year"></td>
+                    <!-- death year is editable field -->
+                    <td><input class="year" type="text" ng-model="president.death_year"></td>
+                    <!-- age upon death is non-editable field, span is to hide if pres is still alive -->
+                    <td class="year">
+                      <span ng-show="president.death_year - president.birth_year > 0">
+                      {{president.death_year - president.birth_year}}
+                      </span>
+                      <span id="alive" ng-show="president.death_year - president.birth_year < 0">
+                      {{2017 - president.birth_year}}
+                      </span>
+                    </td>
+                    <!-- took/left office dates are editable field, css class to resize input field width -->
+                    <td><input class="date" type="text" ng-model="president.took_office"></td>
+                    <td><input class="date" type="text" ng-model="president.left_office"></td>
+                    <!-- party is editable field, ng-class CSS formatting is blue for Dem, red for Repub -->
+                    <td><input ng-class="{'democrat': president.party == 'Democratic', 'republican': president.party == 'Republican'}" type="text" ng-model="president.party"></td>
+                    <!-- dem/repub party icon -->
+                    <td><img src="images/democrat.png" alt="donkey" ng-show="president.party == 'Democratic'"><img src="images/republican.png" alt="elephant" ng-show="president.party == 'Republican'"></td>
+                    <!-- update and delete buttons -->
+                    <td><button ng-click="update(president)">update</button></td>
+                    <td><button ng-click="delete(president)">delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</body>
+
+</html>
